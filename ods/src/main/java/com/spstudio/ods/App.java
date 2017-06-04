@@ -18,6 +18,7 @@ public class App extends AbstractVerticle {
 
 		StaticHandler staticHandler = StaticHandler.create();
 		staticHandler.setDefaultContentEncoding("utf-8");
+		router.route("/").handler(staticHandler);
 		router.route("/static/*").handler(staticHandler);
 		
 		router.route().handler(routingContext -> {
