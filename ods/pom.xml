@@ -49,10 +49,10 @@
 			<version>1.7.25</version>
 		</dependency>
 
-		<!-- JWT -->
+		<!-- MySQL configuration -->
 		<dependency>
 			<groupId>io.vertx</groupId>
-			<artifactId>vertx-auth-jwt</artifactId>
+			<artifactId>vertx-mysql-postgresql-client</artifactId>
 			<version>3.4.1</version>
 		</dependency>
 	</dependencies>
