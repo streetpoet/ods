@@ -49,10 +49,21 @@
 			<version>1.7.25</version>
 		</dependency>
 
-		<!-- MySQL configuration -->
+		<!-- JDBC configuration -->
 		<dependency>
 			<groupId>io.vertx</groupId>
-			<artifactId>vertx-mysql-postgresql-client</artifactId>
+			<artifactId>vertx-jdbc-client</artifactId>
+			<version>3.4.1</version>
+		</dependency>
+		<dependency>
+			<groupId>mysql</groupId>
+			<artifactId>mysql-connector-java</artifactId>
+			<version>5.1.42</version>
+		</dependency>
+		<!-- JDBC Auth Provider configuration -->
+		<dependency>
+			<groupId>io.vertx</groupId>
+			<artifactId>vertx-auth-jdbc</artifactId>
 			<version>3.4.1</version>
 		</dependency>
 	</dependencies>
