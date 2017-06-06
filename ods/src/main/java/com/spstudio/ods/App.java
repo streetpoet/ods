@@ -43,7 +43,7 @@ public class App extends AbstractVerticle {
 		router.route("/business/*").handler(authHandler);
 		
 //		router.route("/gen").blockingHandler(routingContext -> {
-//			JsonObject config = new JsonObject()
+//			JsonObject config = new JsonObject() 
 //					.put("driver_class", "com.mysql.jdbc.Driver")
 //					.put("url", "jdbc:mysql://localhost/testdb")
 //					.put("user", "vertx")
