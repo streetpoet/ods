@@ -82,7 +82,7 @@ public class App extends AbstractVerticle {
 
 		// template engine configuration
 		ThymeleafTemplateEngine engine = ThymeleafTemplateEngine.create();
-		TemplateHandler handler = TemplateHandler.create(engine);
+		TemplateHandler handler = TemplateHandler.create(engine); 
 
 		router.get("/business/*").handler(handler);
 
