@@ -3,7 +3,8 @@
 <body>
 	<div th:fragment="navigator (activeVar)">
 		<div class="masthead">
-			<h3 class="text-muted">Order Distribution System</h3>
+			<h3 class="text-muted">Task Assignment System</h3>
+			<p class="text-right"><strong><a class="text-danger" href="/logout">Logout</a></strong></p>
 			<nav>
 				<ul class="nav nav-justified">
 					<li th:class="${activeVar == 'dashboard' ? 'active' : ''}"><a href="/business/dashboard.html">Dashboard</a></li>
