@@ -72,7 +72,7 @@ public class App extends AbstractVerticle {
 		router.route("/").handler(staticHandler);
 		router.route("/static/*").handler(staticHandler);
 
-		// AuthHandler authHandler = buildJwtAuthHandler();
+		// AuthHandler authHandler = buildJwtAuthHandler(); 
 		// router.route("/business/*").handler(authHandler);
 
 		router.route().handler(routingContext -> {
