@@ -60,6 +60,8 @@ public class HttpServerVerticle extends AbstractVerticle {
 			rc.response().putHeader("Pragma", "no-cache");
 			rc.response().putHeader("Expires", "0");
 			rc.response().putHeader("Cache-Control", "no-cache, no-store, must-revalidate");
+			rc.response().putHeader("Access-Control-Allow-Origin", "*");
+			rc.response().putHeader("Access-Control-Allow-Methods", "GET, POST, PUT ,DELETE");
 			rc.next();
 		});
 

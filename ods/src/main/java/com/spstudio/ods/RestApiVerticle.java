@@ -13,6 +13,7 @@ import io.vertx.core.json.Json;
 import io.vertx.core.json.JsonArray;
 import io.vertx.core.json.JsonObject;
 import io.vertx.ext.jdbc.JDBCClient;
+import io.vertx.ext.sql.SQLConnection;
 import io.vertx.ext.web.Router;
 import io.vertx.ext.web.handler.BodyHandler;
 import io.vertx.ext.web.handler.CorsHandler;
@@ -31,22 +32,21 @@ public class RestApiVerticle extends AbstractVerticle {
 		DBConfigFactory dbConfigFactory = new MySQLDBConfigFactory();
 		JDBCClient client = JDBCClient.createShared(vertx, dbConfigFactory.createDatabaseConfig());
 
-		router.route().handler(CorsHandler.create("*"));
+		router.route().handler(CorsHandler.create("http://localhost:8080"));
 		router.route().handler(BodyHandler.create());
 
-		router.post("/api/labels").handler(rc -> {
+		router.post("/api/labels").blockingHandler(rc -> {
 			client.getConnection(res -> {
 				if (res.succeeded()) {
 					JsonObject labelEntity = rc.getBodyAsJson();
-					res.result().updateWithParams("INSERT INTO LABEL(label_name) VALUES (?)",
+					SQLConnection conn = res.result();
+					conn.updateWithParams("INSERT INTO LABEL(label_name) VALUES (?)",
 							new JsonArray().add(labelEntity.getString("labelName")), r -> {
+								conn.close();
 								if (r.succeeded()) {
-									rc.response().end(Json.encode(Collections.singletonMap("result", "ok")));
+									rc.response().end("{}");
 								} else {
-									rc.response()
-										.setStatusCode(500)
-										.setStatusMessage(r.cause().getLocalizedMessage())
-										.end();
+									rc.response().setStatusCode(500).setStatusMessage(r.cause().getLocalizedMessage()).end();
 								}
 							});
 				} else {
@@ -59,13 +59,37 @@ public class RestApiVerticle extends AbstractVerticle {
 		router.get("/api/labels").blockingHandler(rc -> {
 			client.getConnection(res -> {
 				if (res.succeeded()) {
-					res.result().query("SELECT id, label_name FROM LABEL", r -> {
+					SQLConnection conn = res.result();
+					conn.query("SELECT id, label_name labelName FROM LABEL ORDER BY label_name ASC", r -> {
+						conn.close();
 						if (r.succeeded()) {
-							rc.response().setChunked(true);
-							rc.response().write(Json.encodePrettily(r.result().getRows()));
-							rc.response().end();
+							rc.response().end(Json.encodePrettily(r.result().getRows()));
+						} else {
+							rc.response().setStatusCode(500).setStatusMessage(r.cause().getLocalizedMessage()).end();
 						}
 					});
+				} else {
+					rc.response().setStatusCode(500).end();
+				}
+			});
+		});
+
+		router.delete("/api/labels/:id").blockingHandler(rc -> {
+			client.getConnection(res -> {
+				if (res.succeeded()) {
+					SQLConnection conn = res.result();
+					conn.updateWithParams("delete from LABEL where id = ?",
+							new JsonArray().add(rc.request().getParam("id")), r -> {
+								conn.close();
+								if (r.succeeded()) {
+									rc.response().end();
+								} else {
+									rc.response().setStatusCode(500).setStatusMessage(r.cause().getLocalizedMessage())
+											.end();
+								}
+							});
+				} else {
+					rc.response().setStatusCode(500).end();
 				}
 			});
 		});
@@ -77,7 +101,7 @@ public class RestApiVerticle extends AbstractVerticle {
 				System.out.println("Failed to bind!");
 			}
 		});
-		
+
 		startFuture.complete();
 	}
 
