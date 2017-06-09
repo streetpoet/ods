@@ -35,11 +35,43 @@
 
 		<!-- The justified navigation menu is meant for single line per list item.
            Multiple lines will require custom code not provided by Bootstrap. -->
-		
+
 
 		<!-- Jumbotron -->
 		<div th:insert="~{templates/nav.html::navigator ('label')}"></div>
+		<div class="panel panel-default" style="margin-top: 20px">
+			<div class="panel-body">
+				<form id="labelCreationForm" class="form-inline">
+					<div class="form-group"></div>
+					<label for="labelName">Label Name: </label> <input id="labelName"
+						name="labelName" type="text" class="form-control"
+						placeholder="new label name">
 
+					<button type="submit" class="btn btn-success" onclick="">Add</button>
+				</form>
+			</div>
+		</div>
+
+		<table class="table table-condensed table-striped">
+			<tr>
+				<th>Label Name</th>
+				<th>Operation</th>
+			</tr>
+			<tr>
+				<td><h5>
+						<span class="label label-primary">Primary</span>
+					</h5></td>
+				<td><button type="button" class="btn btn-info">Update</button>
+					<button type="button" class="btn btn-danger">Delete</button></td>
+			</tr>
+			<tr>
+				<td><h5>
+						<span class="label label-primary">Primary</span>
+					</h5></td>
+				<td><button type="button" class="btn btn-info">Update</button>
+					<button type="button" class="btn btn-danger">Delete</button></td>
+			</tr>
+		</table>
 		<!-- Site footer -->
 		<footer class="footer">
 			<p>&copy; 2017 William Studio, Inc.</p>
@@ -50,5 +82,8 @@
 
 	<!-- IE10 viewport hack for Surface/desktop Windows 8 bug -->
 	<script src="/static/js/ie10-viewport-bug-workaround.js"></script>
+	<!-- Jquery -->
+	<script src="/static/js/jquery-3.2.1.min.js"></script>
+	<script src="/static/js/fn_label.js"></script>
 </body>
 </html>
