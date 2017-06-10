@@ -70,8 +70,8 @@ function loadUserData() {
 					+ '<td>' + obj.username + '</td>'
 					+ '<td>' + obj.nickname + '</td>'
 					+ '<td>' + obj.email + '</td>'
-					+ '<td><h5><span class="label label-primary">' + obj.labelName + '</span></h5></td>'
-					+ '<td><button type="button" class="btn btn-info">Update</button> <button type="button" class="btn btn-danger" onclick="deleteData(' + obj.id + ')">Delete</button></td>'
+					+ '<td><span class="label label-primary">' + obj.labelName + '</span></td>'
+					+ '<td><button type="button" class="btn btn-info btn-sm">Update</button> <button type="button" class="btn btn-danger btn-sm" onclick="deleteData(' + obj.id + ')">Delete</button></td>'
 					+ '</tr>');
 		});
 	});

@@ -41,9 +41,9 @@ function loadData() {
 	}).then(function(data) {
 		$('#labelTable tbody > tr').remove();
 		$.each(JSON.parse(data), function(i, obj) {
-			$('#labelTable tbody').append('<tr><td><h5><span class="label label-primary">' 
+			$('#labelTable tbody').append('<tr><td><span class="label label-primary">' 
 					+ obj.labelName 
-					+ '</span></h5></td><td><button type="button" class="btn btn-info">Update</button> <button type="button" class="btn btn-danger" onclick="deleteData(' + obj.id + ')">Delete</button></td></tr>');
+					+ '</span></td><td><button type="button" class="btn btn-info btn-sm">Update</button> <button type="button" class="btn btn-danger btn-sm" onclick="deleteData(' + obj.id + ')">Delete</button></td></tr>');
 		});
 	});
 }
