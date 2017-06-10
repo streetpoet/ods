@@ -26,8 +26,8 @@ $(function() {
 					$('input#labelName').val('');
 					loadData();
 				},
-				error : function(textStatus, errorThrown) {
-					alert(errorThrown);
+				error : function(xhr, errorType, exception) {
+					alert(exception);
 				}
 			});
 		}
@@ -55,6 +55,8 @@ function deleteData(id) {
 	    success: function(result) {
 	        alert('delete success');
 	        loadData();
-	    }
+	    },error : function(xhr, errorType, exception) {
+			alert(exception);
+		}
 	});
 }

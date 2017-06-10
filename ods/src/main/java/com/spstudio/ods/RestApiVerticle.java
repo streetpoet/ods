@@ -143,7 +143,7 @@ public class RestApiVerticle extends AbstractVerticle {
 			client.getConnection(res -> {
 				if (res.succeeded()) {
 					SQLConnection conn = res.result();
-					conn.query("SELECT u.id, username, nickname, email, LABEL.label_name FROM USER u, LABEL WHERE u.label_id = LABEL.id ORDER BY ID ASC", r -> {
+					conn.query("SELECT u.id, username, nickname, email, LABEL.label_name labelName FROM USER u, LABEL WHERE u.label_id = LABEL.id ORDER BY ID ASC", r -> {
 						conn.close();
 						if (r.succeeded()) {
 							rc.response().end(Json.encodePrettily(r.result().getRows()));
@@ -151,6 +151,31 @@ public class RestApiVerticle extends AbstractVerticle {
 							rc.response().setStatusCode(500).setStatusMessage(r.cause().getLocalizedMessage()).end();
 						}
 					});
+				} else {
+					rc.response().setStatusCode(500).end();
+				}
+			});
+		});
+		
+		apiRouter.delete("/users/:id").blockingHandler(rc -> {
+			int deleteId = Integer.parseInt(rc.request().getParam("id"));
+			if (deleteId <= 1) {
+				rc.response().setStatusCode(500).setStatusMessage("forbidden to delete system administrator").end();
+				return;
+			}
+			client.getConnection(res -> {
+				if (res.succeeded()) {
+					SQLConnection conn = res.result();
+					conn.updateWithParams("delete from USER where id = ?",
+							new JsonArray().add(deleteId), r -> {
+								conn.close();
+								if (r.succeeded()) {
+									rc.response().end();
+								} else {
+									rc.response().setStatusCode(500).setStatusMessage(r.cause().getLocalizedMessage())
+											.end();
+								}
+							});
 				} else {
 					rc.response().setStatusCode(500).end();
 				}
