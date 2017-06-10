@@ -60,13 +60,19 @@ public class HttpServerVerticle extends AbstractVerticle {
 			rc.response().putHeader("Pragma", "no-cache");
 			rc.response().putHeader("Expires", "0");
 			rc.response().putHeader("Cache-Control", "no-cache, no-store, must-revalidate");
-			rc.response().putHeader("Access-Control-Allow-Origin", "*");
-			rc.response().putHeader("Access-Control-Allow-Methods", "GET, POST, PUT ,DELETE");
 			rc.next();
 		});
 
 		// Authorization
 		router.get("/business/label.html").handler(rc -> {
+			rc.user().isAuthorised("role:admin", handler -> {
+				if (handler.failed()) {
+					rc.reroute("/business/dashboard.html");
+				}
+				rc.next();
+			});
+		});
+		router.get("/business/user.html").handler(rc -> {
 			rc.user().isAuthorised("role:admin", handler -> {
 				if (handler.failed()) {
 					rc.reroute("/business/dashboard.html");

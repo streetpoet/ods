@@ -1,6 +1,6 @@
 $(function() {
 
-	loadData();
+	loadSelectionData();
 
 	// hang on event of form with id=myform
 	$("#labelCreationForm").submit(function(e) {
@@ -35,15 +35,15 @@ $(function() {
 
 });
 
-function loadData() {
+function loadSelectionData() {
 	$.ajax({
 		url : 'http://localhost:8090/api/labels'
 	}).then(function(data) {
-		$('#labelTable tbody > tr').remove();
+		$('#selectLabel > option').remove();
 		$.each(JSON.parse(data), function(i, obj) {
-			$('#labelTable tbody').append('<tr><td><h5><span class="label label-primary">' 
+			$('#selectLabel').append('<option>' 
 					+ obj.labelName 
-					+ '</span></h5></td><td><button type="button" class="btn btn-info">Update</button> <button type="button" class="btn btn-danger" onclick="deleteData(' + obj.id + ')">Delete</button></td></tr>');
+					+ '</option>');
 		});
 	});
 }

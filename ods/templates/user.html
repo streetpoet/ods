@@ -35,20 +35,53 @@
 
 		<!-- The justified navigation menu is meant for single line per list item.
            Multiple lines will require custom code not provided by Bootstrap. -->
-		<div th:insert="~{templates/nav.html::navigator ('user')}"></div>
+
 
 		<!-- Jumbotron -->
-		<div class="jumbotron">
-			<h1>Marketing stuff!</h1>
-			<p class="lead">Cras justo odio, dapibus ac facilisis in, egestas
-				eget quam. Fusce dapibus, tellus ac cursus commodo, tortor mauris
-				condimentum nibh, ut fermentum massa justo sit amet.</p>
-			<p>
-				<a class="btn btn-lg btn-success" href="#" role="button">Get
-					started today</a>
-			</p>
+		<div th:insert="~{templates/nav.html::navigator ('user')}"></div>
+		<div class="panel panel-default" style="margin-top: 20px">
+			<div class="panel-body">
+				<form id="userCreationForm" class="form-inline">
+					<div class="form-group">
+						<label for="inputName">Login Id</label> <input type="text"
+							class="form-control" id="inputName" placeholder="login id">
+					</div>
+					<div class="form-group">
+						<label for="inputPassword">Password</label> <input type="password"
+							class="form-control" id="inputPassword"
+							placeholder="login password">
+					</div>
+					<div class="form-group">
+						<label for="inputEmail">Email</label> <input type="email"
+							class="form-control" id="inputEmail" placeholder="email address">
+					</div>
+					<div class="form-group">
+						<label for="selectLabel">Label</label>
+						<select id="selectLabel" class="form-control">
+							<option>1</option>
+							<option>2</option>
+							<option>3</option>
+							<option>4</option>
+							<option>5</option>
+						</select>
+					</div>
+					<button type="submit" class="btn btn-success">Create User</button>
+				</form>
+			</div>
 		</div>
 
+		<table id="labelTable" class="table table-condensed table-striped">
+			<thead>
+				<tr>
+					<th>Label Name</th>
+					<th>Operation</th>
+				</tr>
+			</thead>
+			<tbody>
+
+			</tbody>
+		</table>
+		<p id="test"></p>
 		<!-- Site footer -->
 		<footer class="footer">
 			<p>&copy; 2017 William Studio, Inc.</p>
@@ -59,5 +92,8 @@
 
 	<!-- IE10 viewport hack for Surface/desktop Windows 8 bug -->
 	<script src="/static/js/ie10-viewport-bug-workaround.js"></script>
+	<!-- Jquery -->
+	<script src="/static/js/jquery-3.2.1.min.js"></script>
+	<script src="/static/js/fn_user.js"></script>
 </body>
 </html>

@@ -1,12 +1,11 @@
 package com.spstudio.ods;
 
-import java.util.Collections;
-
 import com.spstudio.ods.config.DBConfigFactory;
 import com.spstudio.ods.config.MySQLDBConfigFactory;
 
 import io.vertx.core.AbstractVerticle;
 import io.vertx.core.Future;
+import io.vertx.core.http.HttpMethod;
 import io.vertx.core.http.HttpServer;
 import io.vertx.core.http.HttpServerOptions;
 import io.vertx.core.json.Json;
@@ -32,7 +31,19 @@ public class RestApiVerticle extends AbstractVerticle {
 		DBConfigFactory dbConfigFactory = new MySQLDBConfigFactory();
 		JDBCClient client = JDBCClient.createShared(vertx, dbConfigFactory.createDatabaseConfig());
 
-		router.route().handler(CorsHandler.create("http://localhost:8080"));
+		router.route().handler(CorsHandler.create("http://localhost:8080")
+				.allowCredentials(true)
+				.allowedHeader("Access-Control-Allow-Method")
+				.allowedHeader("Access-Control-Allow-Origin")
+				.allowedHeader("Access-Control-Allow-Credentials")
+				.allowedHeader("Content-Type")
+				.allowedMethod(HttpMethod.GET)
+				.allowedMethod(HttpMethod.POST)
+				.allowedMethod(HttpMethod.OPTIONS)
+				.allowedMethod(HttpMethod.PUT)
+				.allowedMethod(HttpMethod.DELETE)
+				.maxAgeSeconds(1800));
+
 		router.route().handler(BodyHandler.create());
 
 		router.post("/api/labels").blockingHandler(rc -> {

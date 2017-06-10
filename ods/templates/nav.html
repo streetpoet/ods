@@ -8,9 +8,9 @@
 			<nav>
 				<ul class="nav nav-justified">
 					<li th:class="${activeVar == 'dashboard' ? 'active' : ''}"><a href="/business/dashboard.html">Dashboard</a></li>
+					<li th:class="${activeVar == 'task' ? 'active' : ''}"><a href="/business/task.html">Order Mgmt</a></li>
 					<li th:class="${activeVar == 'user' ? 'active' : ''}"><a href="/business/user.html">User Mgmt</a></li>
-					<li th:class="${activeVar == 'task' ? 'active' : ''}"><a href="/business/task.html">Order</a></li>
-					<li th:class="${activeVar == 'label' ? 'active' : ''}"><a href="/business/label.html">Label</a></li>
+					<li th:class="${activeVar == 'label' ? 'active' : ''}"><a href="/business/label.html">Label Mgmt</a></li>
 				</ul>
 			</nav>
 		</div>
