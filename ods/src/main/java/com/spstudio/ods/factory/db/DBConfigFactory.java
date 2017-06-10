@@ -1,4 +1,4 @@
-package com.spstudio.ods.config;
+package com.spstudio.ods.factory.db;
 
 import io.vertx.core.json.JsonObject;
 

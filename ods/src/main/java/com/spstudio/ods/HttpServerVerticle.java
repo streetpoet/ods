@@ -1,10 +1,11 @@
 package com.spstudio.ods;
 
-import com.spstudio.ods.config.DBConfigFactory;
-import com.spstudio.ods.config.MySQLDBConfigFactory;
+import com.spstudio.ods.factory.db.DBConfigFactory;
+import com.spstudio.ods.factory.db.MySQLDBConfigFactory;
 
 import io.vertx.core.AbstractVerticle;
 import io.vertx.core.Future;
+import io.vertx.core.http.HttpHeaders;
 import io.vertx.core.http.HttpServer;
 import io.vertx.core.http.HttpServerOptions;
 import io.vertx.ext.auth.jdbc.JDBCAuth;
@@ -49,14 +50,15 @@ public class HttpServerVerticle extends AbstractVerticle {
 
 		AuthHandler authHandler = BasicAuthHandler.create(authProvider);
 		router.route("/business/*").handler(authHandler);
-		router.route("/api/*").handler(authHandler);
 
-		router.route("/logout").handler(routingContext -> {
-			routingContext.clearUser();
-			routingContext.reroute("/");
+		router.route("/logout").handler(rc -> {
+			rc.clearUser();
+			rc.response().headers().remove(HttpHeaders.AUTHORIZATION);
+			rc.response().end();
 		});
 
 		router.route("/business/*").handler(rc -> {
+			System.out.println(rc.user() != null ? rc.user().principal() : "null");
 			rc.response().putHeader("Pragma", "no-cache");
 			rc.response().putHeader("Expires", "0");
 			rc.response().putHeader("Cache-Control", "no-cache, no-store, must-revalidate");
