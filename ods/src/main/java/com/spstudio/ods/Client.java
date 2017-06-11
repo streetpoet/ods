@@ -1,5 +1,8 @@
 package com.spstudio.ods;
 
+import com.spstudio.ods.verticle.HttpServerVerticle;
+import com.spstudio.ods.verticle.RestApiVerticle;
+
 import io.vertx.core.Verticle;
 import io.vertx.core.Vertx;
 

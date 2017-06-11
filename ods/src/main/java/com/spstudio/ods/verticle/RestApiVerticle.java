@@ -1,4 +1,4 @@
-package com.spstudio.ods;
+package com.spstudio.ods.verticle;
 
 import com.spstudio.ods.api.label.LabelHandler;
 import com.spstudio.ods.api.label.LabelHandlerImpl;
