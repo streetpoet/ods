@@ -1,7 +1,7 @@
 package com.spstudio.ods;
 
-import com.spstudio.ods.api.user.LabelHandler;
-import com.spstudio.ods.api.user.LabelHandlerImpl;
+import com.spstudio.ods.api.label.LabelHandler;
+import com.spstudio.ods.api.label.LabelHandlerImpl;
 import com.spstudio.ods.api.user.UserHandler;
 import com.spstudio.ods.api.user.UserHandlerImpl;
 import com.spstudio.ods.factory.cors.CorsHandlerFactory;

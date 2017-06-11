@@ -1,4 +1,4 @@
-package com.spstudio.ods.api.user;
+package com.spstudio.ods.api.label;
 
 import io.vertx.ext.web.RoutingContext;
 
