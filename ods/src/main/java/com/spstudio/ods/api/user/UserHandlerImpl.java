@@ -1,5 +1,7 @@
 package com.spstudio.ods.api.user;
 
+import com.spstudio.ods.OdsUtil;
+
 import io.vertx.core.json.Json;
 import io.vertx.core.json.JsonArray;
 import io.vertx.core.json.JsonObject;
@@ -50,16 +52,30 @@ public class UserHandlerImpl implements UserHandler {
 		client.getConnection(res -> {
 			if (res.succeeded()) {
 				SQLConnection conn = res.result();
-				conn.updateWithParams("delete from USER where id = ?", new JsonArray().add(deleteId), r -> {
-					conn.close();
-					if (r.succeeded()) {
-						rc.response().end();
+				conn.setAutoCommit(false, autoCommitHandler -> {
+					if (autoCommitHandler.succeeded()) {
+						conn.updateWithParams(
+								"delete from USER_ROLES where username = (select username from USER where id = ?)",
+								new JsonArray().add(deleteId), r -> {
+									if (r.succeeded()) {
+										conn.updateWithParams("delete from USER where id = ?",
+												new JsonArray().add(deleteId), r2 -> {
+													if (r2.succeeded()) {
+														OdsUtil.commitWithEndResponse(conn, rc, new JsonObject());
+													}else {
+														OdsUtil.rollbackWithEndResponse(conn, rc, r2);
+													}
+												});
+									} else {
+										OdsUtil.rollbackWithEndResponse(conn, rc, r);
+									}
+								});
 					} else {
-						rc.response().setStatusCode(500).setStatusMessage(r.cause().getLocalizedMessage()).end();
+						OdsUtil.rollbackWithEndResponse(conn, rc, autoCommitHandler);
 					}
 				});
 			} else {
-				rc.response().setStatusCode(500).end();
+				OdsUtil.errorEndResponse(rc, res);
 			}
 		});
 	}
@@ -71,23 +87,36 @@ public class UserHandlerImpl implements UserHandler {
 				JsonObject userEntity = rc.getBodyAsJson();
 				String salt = jdbcAuth.generateSalt();
 				String hashedPassword = jdbcAuth.computeHash(userEntity.getString("password"), salt);
-				JsonArray jsonParam = new JsonArray().add(userEntity.getString("loginId"))
-						.add(userEntity.getString("nickname")).add(hashedPassword).add(salt)
-						.add(userEntity.getString("email")).add(Integer.parseInt(userEntity.getString("labelId")));
+				String loginId = userEntity.getString("loginId");
+				JsonArray jsonParam = new JsonArray().add(loginId).add(userEntity.getString("nickname"))
+						.add(hashedPassword).add(salt).add(userEntity.getString("email"))
+						.add(Integer.parseInt(userEntity.getString("labelId")));
 				SQLConnection conn = res.result();
-				conn.updateWithParams(
-						"insert into USER (username, nickname, password, password_salt, email, label_id) values (?, ?, ?, ?, ?, ?)",
-						jsonParam, r -> {
-							conn.close();
-							if (r.succeeded()) {
-								rc.response().end("{}");
-							} else {
-								rc.response().setStatusCode(500).setStatusMessage(r.cause().getLocalizedMessage())
-										.end();
-							}
-						});
+				conn.setAutoCommit(false, autoCommitHandler -> {
+					if (autoCommitHandler.succeeded()) {
+						conn.updateWithParams(
+								"insert into USER (username, nickname, password, password_salt, email, label_id) values (?, ?, ?, ?, ?, ?)",
+								jsonParam, r -> {
+									if (r.succeeded()) {
+										conn.updateWithParams("insert into USER_ROLES (username, role) values (?, ?)",
+												new JsonArray().add(loginId).add("user"), r2 -> {
+													if (r2.succeeded()) {
+														OdsUtil.commitWithEndResponse(conn, rc, new JsonObject());
+													} else {
+														OdsUtil.rollbackWithEndResponse(conn, rc, r2);
+													}
+												});
+									} else {
+										OdsUtil.rollbackWithEndResponse(conn, rc, r);
+									}
+								});
+					} else {
+						OdsUtil.rollbackWithEndResponse(conn, rc, autoCommitHandler);
+					}
+				});
+
 			} else {
-				rc.response().setStatusCode(500).end();
+				OdsUtil.errorEndResponse(rc, res);
 			}
 		});
 	}
