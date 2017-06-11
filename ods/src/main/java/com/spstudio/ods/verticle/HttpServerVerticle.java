@@ -65,16 +65,22 @@ public class HttpServerVerticle extends AbstractVerticle {
 		// Authorization
 		router.get("/business/label.html").handler(rc -> {
 			rc.user().isAuthorised("role:admin", handler -> {
-				if (handler.failed()) {
-					rc.reroute("/business/dashboard.html");
+				if (handler.succeeded()) {
+					if (!handler.result()) {
+						rc.reroute("/business/dashboard.html");
+						return;
+					}
 				}
 				rc.next();
 			});
 		});
 		router.get("/business/user.html").handler(rc -> {
 			rc.user().isAuthorised("role:admin", handler -> {
-				if (handler.failed()) {
-					rc.reroute("/business/dashboard.html");
+				if (handler.succeeded()) {
+					if (!handler.result()) {
+						rc.reroute("/business/dashboard.html");
+						return;
+					}
 				}
 				rc.next();
 			});
