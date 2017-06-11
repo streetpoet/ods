@@ -59,6 +59,7 @@ public class HttpServerVerticle extends AbstractVerticle {
 			rc.response().putHeader("Pragma", "no-cache");
 			rc.response().putHeader("Expires", "0");
 			rc.response().putHeader("Cache-Control", "no-cache, no-store, must-revalidate");
+			rc.put("user", rc.user().principal().getString("username"));
 			rc.next();
 		});
 
