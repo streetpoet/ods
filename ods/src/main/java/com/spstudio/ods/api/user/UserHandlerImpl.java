@@ -150,4 +150,24 @@ public class UserHandlerImpl implements UserHandler {
 		});
 	}
 
+	@Override
+	public void readUsersByLabel(RoutingContext rc) {
+		client.getConnection(res -> {
+			if (res.succeeded()) {
+				SQLConnection conn = res.result();
+				conn.queryWithParams(
+						"SELECT id, username loginId, nickname, email FROM USER WHERE label_id = ? ORDER BY id ASC", new JsonArray().add(Integer.parseInt(rc.request().getParam("labelId"))), r -> {
+							conn.close();
+							if (r.succeeded()) {
+								rc.response().end(Json.encodePrettily(r.result().getRows()));
+							} else {
+								rc.response().setStatusCode(500).setStatusMessage(r.cause().getMessage()).end();
+							}
+						});
+			} else {
+				rc.response().setStatusCode(500).end();
+			}
+		});
+	}
+
 }

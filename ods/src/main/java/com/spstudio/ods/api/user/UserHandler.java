@@ -7,4 +7,5 @@ public interface UserHandler {
 	public void createUser(RoutingContext rc);
 	public void readUsers(RoutingContext rc);
 	public void deleteUser(RoutingContext rc);
+	public void readUsersByLabel(RoutingContext rc);
 }

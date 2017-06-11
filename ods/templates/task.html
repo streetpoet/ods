@@ -37,16 +37,45 @@
            Multiple lines will require custom code not provided by Bootstrap. -->
 		<div th:insert="~{templates/nav.html::navigator ('task')}"></div>
 
-		<!-- Jumbotron -->
-		<div class="jumbotron">
-			<h1>Marketing stuff!</h1>
-			<p class="lead">Cras justo odio, dapibus ac facilisis in, egestas
-				eget quam. Fusce dapibus, tellus ac cursus commodo, tortor mauris
-				condimentum nibh, ut fermentum massa justo sit amet.</p>
-			<p>
-				<a class="btn btn-lg btn-success" href="#" role="button">Get
-					started today</a>
-			</p>
+		<div class="panel panel-success" style="margin-top: 20px">
+			<div class="panel-body">
+				<form id="taskCreationForm" class="form">
+					<div class="form-group">
+						<label for="taskDetail">Task Detail</label>
+						<textarea class="form-control" id="taskDetail"
+							placeholder="task detail" rows="8"></textarea>
+					</div>
+					<div class="form-group">
+						<label for="selectLabel">Select Label</label> <select id="selectLabel"
+							class="form-control">
+							<option>No Label Selected</option>
+						</select>
+					</div>
+					<div class="form-group">
+						<label for="selectAssigner">Select Assigner</label> <select
+							id="selectAssigner" class="form-control">
+						</select>
+					</div>
+					<button type="submit" class="btn btn-success">Create Task</button>
+				</form>
+			</div>
+		</div>
+		<div class="panel panel-info">
+			<div class="panel-body">
+				<table id="userTable" class="table table-condensed table-striped"
+					style="margin-bottom: -10px">
+					<thead>
+						<tr>
+							<th>Login Id</th>
+							<th>Nickname</th>
+							<th>Email</th>
+							<th>Label</th>
+							<th>Operation</th>
+						</tr>
+					</thead>
+					<tbody></tbody>
+				</table>
+			</div>
 		</div>
 
 		<!-- Site footer -->
@@ -59,5 +88,8 @@
 
 	<!-- IE10 viewport hack for Surface/desktop Windows 8 bug -->
 	<script src="/static/js/ie10-viewport-bug-workaround.js"></script>
+	<script src="/static/js/jquery-3.2.1.min.js"></script>
+	<script src="/static/js/fn_common_label_selection.js"></script>
+	<script src="/static/js/fn_task.js"></script>
 </body>
 </html>

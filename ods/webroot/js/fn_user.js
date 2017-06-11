@@ -1,6 +1,6 @@
 $(function() {
 
-	loadSelectionData();
+	loadLabelSelection();
 	loadUserData();
 
 	// hang on event of form with id=myform
@@ -35,7 +35,7 @@ $(function() {
 					$('input#inputPassword').val('');
 					$('input#inputEmail').val('');
 					
-					loadSelectionData();
+					loadLabelSelection();
 					loadUserData();
 				},
 				error : function(xhr, errorType, exception) {
@@ -46,19 +46,6 @@ $(function() {
 	});
 
 });
-
-function loadSelectionData() {
-	$.ajax({
-		url : 'http://localhost:8090/api/labels'
-	}).then(function(data) {
-		$('#selectLabel > option').remove();
-		$.each(JSON.parse(data), function(i, obj) {
-			$('#selectLabel').append('<option value="' + obj.id + '">' 
-					+ obj.labelName 
-					+ '</option>');
-		});
-	});
-}
 
 function loadUserData() {
 	$.ajax({

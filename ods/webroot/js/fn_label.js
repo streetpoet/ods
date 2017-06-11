@@ -1,6 +1,6 @@
 $(function() {
 
-	loadData();
+	loadLabelData();
 
 	// hang on event of form with id=myform
 	$("#labelCreationForm").submit(function(e) {
@@ -24,7 +24,7 @@ $(function() {
 				}),
 				success : function(data) {
 					$('input#labelName').val('');
-					loadData();
+					loadLabelData();
 				},
 				error : function(xhr, errorType, exception) {
 					alert(exception);
@@ -35,7 +35,7 @@ $(function() {
 
 });
 
-function loadData() {
+function loadLabelData() {
 	$.ajax({
 		url : 'http://localhost:8090/api/labels'
 	}).then(function(data) {
@@ -54,7 +54,7 @@ function deleteData(id) {
 	    type: 'delete',
 	    success: function(result) {
 	        alert('delete success');
-	        loadData();
+	        loadLabelData();
 	    },error : function(xhr, errorType, exception) {
 			alert(exception);
 		}

@@ -41,6 +41,7 @@ public class RestApiVerticle extends AbstractVerticle {
 
 		apiRouter.post("/users").blockingHandler(userHandler::createUser);
 		apiRouter.get("/users").blockingHandler(userHandler::readUsers);
+		apiRouter.get("/users/label/:labelId").blockingHandler(userHandler::readUsersByLabel);
 		apiRouter.delete("/users/:id").blockingHandler(userHandler::deleteUser);
 
 		apiRouter.post("/labels").blockingHandler(labelHandler::createLabel);
