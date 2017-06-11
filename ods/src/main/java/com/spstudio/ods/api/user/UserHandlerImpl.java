@@ -1,7 +1,11 @@
 package com.spstudio.ods.api.user;
 
+import java.util.Arrays;
+
 import com.spstudio.ods.OdsUtil;
 
+import io.vertx.core.CompositeFuture;
+import io.vertx.core.Future;
 import io.vertx.core.json.Json;
 import io.vertx.core.json.JsonArray;
 import io.vertx.core.json.JsonObject;
@@ -54,20 +58,33 @@ public class UserHandlerImpl implements UserHandler {
 				SQLConnection conn = res.result();
 				conn.setAutoCommit(false, autoCommitHandler -> {
 					if (autoCommitHandler.succeeded()) {
+
+						Future<Void> deleteUserRoleFuture = Future.future();
 						conn.updateWithParams(
 								"delete from USER_ROLES where username = (select username from USER where id = ?)",
 								new JsonArray().add(deleteId), r -> {
-									if (r.succeeded()) {
-										conn.updateWithParams("delete from USER where id = ?",
-												new JsonArray().add(deleteId), r2 -> {
-													if (r2.succeeded()) {
-														OdsUtil.commitWithEndResponse(conn, rc, new JsonObject());
-													}else {
-														OdsUtil.rollbackWithEndResponse(conn, rc, r2);
-													}
-												});
+									if (r.succeeded() && r.result().getUpdated() == 1) {
+										deleteUserRoleFuture.complete();
 									} else {
-										OdsUtil.rollbackWithEndResponse(conn, rc, r);
+										deleteUserRoleFuture.fail(r.cause().getMessage());
+									}
+								});
+
+						Future<Void> deleteUserFuture = Future.future();
+						conn.updateWithParams("delete from USER where id = ?", new JsonArray().add(deleteId), r2 -> {
+							if (r2.succeeded() && r2.result().getUpdated() == 1) {
+								deleteUserFuture.complete();
+							} else {
+								deleteUserFuture.fail(r2.cause().getMessage());
+							}
+						});
+
+						CompositeFuture.all(Arrays.asList(deleteUserRoleFuture, deleteUserFuture))
+								.setHandler(handler -> {
+									if (handler.succeeded()) {
+										OdsUtil.commitWithEndResponse(conn, rc, new JsonObject());
+									} else {
+										OdsUtil.rollbackWithEndResponse(conn, rc, handler);
 									}
 								});
 					} else {
@@ -94,20 +111,32 @@ public class UserHandlerImpl implements UserHandler {
 				SQLConnection conn = res.result();
 				conn.setAutoCommit(false, autoCommitHandler -> {
 					if (autoCommitHandler.succeeded()) {
+						Future<Void> insertUserFuture = Future.future();
 						conn.updateWithParams(
 								"insert into USER (username, nickname, password, password_salt, email, label_id) values (?, ?, ?, ?, ?, ?)",
 								jsonParam, r -> {
 									if (r.succeeded()) {
-										conn.updateWithParams("insert into USER_ROLES (username, role) values (?, ?)",
-												new JsonArray().add(loginId).add("user"), r2 -> {
-													if (r2.succeeded()) {
-														OdsUtil.commitWithEndResponse(conn, rc, new JsonObject());
-													} else {
-														OdsUtil.rollbackWithEndResponse(conn, rc, r2);
-													}
-												});
+										insertUserFuture.complete();
 									} else {
-										OdsUtil.rollbackWithEndResponse(conn, rc, r);
+										insertUserFuture.fail(r.cause().getMessage());
+									}
+								});
+
+						Future<Void> insertUserRoleFuture = Future.future();
+						conn.updateWithParams("insert into USER_ROLES (username, role) values (?, ?)",
+								new JsonArray().add(loginId).add("user"), r2 -> {
+									if (r2.succeeded()) {
+										insertUserRoleFuture.complete();
+									} else {
+										insertUserRoleFuture.fail(r2.cause().getMessage());
+									}
+								});
+						CompositeFuture.all(Arrays.asList(insertUserFuture, insertUserRoleFuture))
+								.setHandler(handler -> {
+									if (handler.succeeded()) {
+										OdsUtil.commitWithEndResponse(conn, rc, new JsonObject());
+									} else {
+										OdsUtil.rollbackWithEndResponse(conn, rc, handler);
 									}
 								});
 					} else {

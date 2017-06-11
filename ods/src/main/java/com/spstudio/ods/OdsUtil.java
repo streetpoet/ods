@@ -9,7 +9,7 @@ import io.vertx.ext.web.RoutingContext;
 public class OdsUtil {
 
 	public static void errorEndResponse(RoutingContext rc, AsyncResult<?> r) {
-		rc.response().setStatusCode(500).setStatusMessage(r.cause().getLocalizedMessage()).end();
+		rc.response().setStatusCode(500).setStatusMessage(r.cause().getMessage()).end();
 	}
 
 	public static void commitWithEndResponse(SQLConnection conn, RoutingContext rc, JsonObject jsonResponse) {
@@ -30,4 +30,5 @@ public class OdsUtil {
 			});
 		});
 	}
+
 }
