@@ -52,6 +52,7 @@ public class RestApiVerticle extends AbstractVerticle {
 		apiRouter.delete("/labels/:id").blockingHandler(labelHandler::deleteLabel);
 		
 		apiRouter.post("/tasks").blockingHandler(taskHandler::createTask);
+		apiRouter.get("/tasks").blockingHandler(taskHandler::readTasksByUser);
 
 		server.requestHandler(router::accept).listen(8090);
 		startFuture.complete();

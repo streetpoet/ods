@@ -1,5 +1,7 @@
 $(function() {
+	
 	loadLabelSelection();
+	loadTaskData();
 
 	$('select[id=selectLabel]').on('change', function() {
 		loadUserListByLabel($('select[id=selectLabel]').val());
@@ -29,7 +31,9 @@ $(function() {
 				success : function(data) {
 					alert('success created');
 					$('textarea#taskDetail').val('');
+					
 					loadLabelSelection();
+					loadTaskData();
 				},
 				error : function(xhr, errorType, exception) {
 					alert(exception);

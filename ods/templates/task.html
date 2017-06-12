@@ -62,15 +62,15 @@
 		</div>
 		<div class="panel panel-info">
 			<div class="panel-body">
-				<table id="userTable" class="table table-condensed table-striped"
+				<table id="taskTable" class="table table-condensed table-striped"
 					style="margin-bottom: -10px">
 					<thead>
 						<tr>
-							<th>Login Id</th>
-							<th>Nickname</th>
-							<th>Email</th>
+							<th style="width: 40%">Task Detail</th>
 							<th>Label</th>
-							<th>Operation</th>
+							<th>Nickname</th>
+							<th>Assigned Time</th>
+							<th>Finished</th>
 						</tr>
 					</thead>
 					<tbody></tbody>
@@ -91,5 +91,24 @@
 	<script src="/static/js/jquery-3.2.1.min.js"></script>
 	<script src="/static/js/fn_common_label_selection.js"></script>
 	<script src="/static/js/fn_task.js"></script>
+	<script>
+	function loadTaskData() {
+	    $.ajax({
+	        url : 'http://localhost:8090/api/tasks?uid=' + '[[${context.get('user')}]]'
+	    }).then(function(data) {
+	        $('#taskTable tbody > tr').remove();
+	        $.each(JSON.parse(data), function(i, obj) {
+	            $('#taskTable tbody').append('<tr>'
+	                    + '<td>' + obj.detail + '</td>'
+	                    + '<td><span class="label label-primary">' + obj.labelName + '</span></td>'
+	                    + '<td>' + obj.nickname + '</td>'
+	                    + '<td>' + obj.assignedTime + '</td>'
+	                    + '<td>' + (obj.status == 0 ? 'No' : 'Yes') + '</td>'
+	                    + '<td><button type="button" class="btn btn-success btn-sm" onclick="deleteData(' + obj.id + ')">Finish</button></td>'
+	                    + '</tr>');
+	        });
+	    });
+	}
+	</script>
 </body>
 </html>
