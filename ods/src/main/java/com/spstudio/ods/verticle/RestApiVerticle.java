@@ -2,6 +2,8 @@ package com.spstudio.ods.verticle;
 
 import com.spstudio.ods.api.label.LabelHandler;
 import com.spstudio.ods.api.label.LabelHandlerImpl;
+import com.spstudio.ods.api.task.TaskHandler;
+import com.spstudio.ods.api.task.TaskHandlerImpl;
 import com.spstudio.ods.api.user.UserHandler;
 import com.spstudio.ods.api.user.UserHandlerImpl;
 import com.spstudio.ods.factory.cors.CorsHandlerFactory;
@@ -38,6 +40,7 @@ public class RestApiVerticle extends AbstractVerticle {
 
 		UserHandler userHandler = new UserHandlerImpl(client, jdbcAuth);
 		LabelHandler labelHandler = new LabelHandlerImpl(client);
+		TaskHandler taskHandler = new TaskHandlerImpl(client);
 
 		apiRouter.post("/users").blockingHandler(userHandler::createUser);
 		apiRouter.get("/users").blockingHandler(userHandler::readUsers);
@@ -47,6 +50,8 @@ public class RestApiVerticle extends AbstractVerticle {
 		apiRouter.post("/labels").blockingHandler(labelHandler::createLabel);
 		apiRouter.get("/labels").blockingHandler(labelHandler::readLabels);
 		apiRouter.delete("/labels/:id").blockingHandler(labelHandler::deleteLabel);
+		
+		apiRouter.post("/tasks").blockingHandler(taskHandler::createTask);
 
 		server.requestHandler(router::accept).listen(8090);
 		startFuture.complete();
