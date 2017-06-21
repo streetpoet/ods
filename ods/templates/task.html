@@ -37,7 +37,7 @@
            Multiple lines will require custom code not provided by Bootstrap. -->
 		<div th:insert="~{templates/nav.html::navigator ('task')}"></div>
 
-		<div class="panel panel-success" style="margin-top: 20px">
+		<div class="panel panel-success" style="margin-top: 20px" th:if="${context.get('user') == 'admin'}">
 			<div class="panel-body">
 				<form id="taskCreationForm" class="form">
 					<div class="form-group">
@@ -60,6 +60,7 @@
 				</form>
 			</div>
 		</div>
+		
 		<div class="panel panel-info">
 			<div class="panel-body">
 				<table id="taskTable" class="table table-condensed table-striped"
